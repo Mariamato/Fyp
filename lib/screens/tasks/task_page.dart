@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:municipal_cms/screens/tasks/tasks_page.dart';
 import 'package:municipal_cms/utils/util.dart';
 
 import '../../service/api_provider.dart';
@@ -17,18 +18,15 @@ Future<void> _SubmitTask(BuildContext context) async {
   String location = _LocationController.text;
   String task_description = _task_description.text;
 
-  var csrfResponse = await http.get(Uri.parse('/sanctum/csrf-cookie'));
-  var csrfToken = csrfResponse.headers['set-cookie'] ?? '';
-
   var url = Uri.parse("$baseUrl/tasks");
+  String? token = await getToken();
   var headers = <String, String>{
     'Content-Type': 'application/json',
-    'accept': 'appliction/json',
-    'X-XSRF-TOKEN': csrfToken,
-    'user_type': 'Resident'
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token',
   };
   int? userId = await getUserId();
-  String? token = await getToken();
+  print(userId);
   var data = {
     'name': task,
     'location': location,
@@ -37,7 +35,6 @@ Future<void> _SubmitTask(BuildContext context) async {
     'priority': 'low',
     'status': 'new',
     'user_id': userId,
-    'token': 'Bearer $token',
   };
   print(data);
   var response = await http.post(
@@ -67,74 +64,89 @@ class TaskPage extends StatelessWidget {
         ),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10.5, sigmaY: 10.5),
-          child: SizedBox(
-            height: 400.0,
-            width: 300.0,
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 500.0,
+                width: 300.0,
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Form(
+                      key: _formKey,
+                      child: SingleChildScrollView(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Image.asset("assets/resindent.jpg"),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset("assets/resindent.jpg"),
+                              ],
+                            ),
+                            TextFormField(
+                              controller: _TaskController,
+                              decoration: const InputDecoration(
+                                labelText: 'Task:',
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter task required';
+                                }
+                                return null;
+                              },
+                            ),
+                            TextFormField(
+                              controller: _LocationController,
+                              decoration: const InputDecoration(
+                                labelText: 'Location:',
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter the location of the task';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16.0),
+                            TextFormField(
+                              controller: _task_description,
+                              decoration: const InputDecoration(
+                                labelText: 'Task description:',
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter task required';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16.0),
+                            ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _SubmitTask(context);
+                                }
+                              },
+                              child: const Text('Submit'),
+                            ),
                           ],
                         ),
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            labelText: 'Task:',
-                          ),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter task required';
-                            }
-                            return null;
-                          },
-                        ),
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            labelText: 'Location:',
-                          ),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter the location of the task';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16.0),
-                        TextFormField(
-                          controller: _task_description,
-                          decoration: const InputDecoration(
-                            labelText: 'Task description:',
-                          ),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter task required';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16.0),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _SubmitTask(context);
-                            }
-                          },
-                          child: const Text('Submit'),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TasksPage()),
+                  );
+                },
+                child: const Text('see Task history here'),
+              ),
+            ],
           ),
         ),
       ),

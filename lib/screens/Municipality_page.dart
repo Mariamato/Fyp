@@ -29,19 +29,19 @@ class MunicipalityPage extends StatelessWidget {
                 children: [
               _buildMenuItem(
                 context,
-                'Manage Service Provider here',
+                'Manage Service Providers',
                 Icons.local_car_wash,
                 '/manage',
               ),
               _buildMenuItem(
                 context,
-                'Schedule',
+                'View Schedules',
                 Icons.schedule,
                 '/Schedule',
               ),
               _buildMenuItem(
                 context,
-                'View Report',
+                'View Reports',
                 Icons.report,
                 '/Report',
               ),

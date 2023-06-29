@@ -35,6 +35,7 @@ class ResidentLoginPage extends StatelessWidget {
     var data = {
       'phone': phoneNumber,
       'password': password,
+       'role': 'resident',
     };
     var response = await http.post(
       url,

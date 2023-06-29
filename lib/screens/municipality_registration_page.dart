@@ -3,11 +3,11 @@
 import 'dart:ui';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:municipal_cms/screens/municipality_login_page.dart';
+import 'package:municipal_cms/screens/Municipality/municipality_login_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import '../service/api_provider.dart';
-import '../service/visibility_provider.dart';
+import '../../service/api_provider.dart';
+import '../../service/visibility_provider.dart';
 
 class MunicipalityRegistrationPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();

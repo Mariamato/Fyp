@@ -3,13 +3,13 @@
 import 'dart:ui';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:municipal_cms/screens/Municipality_page.dart';
-import 'package:municipal_cms/screens/municipality_registration_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-import '../service/api_provider.dart';
-import '../service/visibility_provider.dart';
+import '../../service/api_provider.dart';
+import '../../service/visibility_provider.dart';
+import '../Municipality_page.dart';
+import '../municipality_registration_page.dart';
 
 // ignore: must_be_immutable
 class MunicipalityLoginPage extends StatelessWidget {
@@ -38,6 +38,7 @@ class MunicipalityLoginPage extends StatelessWidget {
       'phone': phoneNumber,
       'password': password,
     };
+    
 
     var response = await http.post(
       url,

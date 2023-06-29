@@ -5,10 +5,14 @@ import 'package:municipal_cms/construction_page.dart';
 import 'package:municipal_cms/controllers/task_controller.dart';
 import 'package:municipal_cms/screens/Service_provider_login_page.dart';
 import 'package:municipal_cms/screens/lipia_hapa.dart';
-import 'package:municipal_cms/screens/municipality_login_page.dart';
-import 'package:municipal_cms/screens/tasks/tasks_page.dart';
+import 'package:municipal_cms/screens/Municipality/municipality_login_page.dart';
+import 'package:municipal_cms/screens/tasks/task_page.dart';
 import 'package:provider/provider.dart';
+import 'Municipality/manage_service_provider.dart';
+import 'Municipality/view_report.dart';
+import 'Municipality/view_schedule.dart';
 import 'Resident_login_page.dart';
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -30,11 +34,14 @@ class MyApp extends StatelessWidget {
         home: MyHomePage(),
         initialRoute: '/',
         routes: {
-          '/tasks': (context) => TasksPage(),
+         '/Report':(context) => ViewReport(),
+         '/Schedule':(context) => ViewSchedule(),
+         '/manage':(context) =>  ManageServiceProvider(),
+          '/tasks': (context) => TaskPage(),
           '/payments': (context) => ConstructionPage(),
           '/schedules': (context) => ConstructionPage(),
           '/resident': (context) => ResidentLoginPage(),
-          '/ServiceProviderLoginpage': (context) => ServiceProviderLoginPage(),
+          '/ServiceProvider': (context) => ServiceProviderLoginPage(),
           '/Municipality': (context) => MunicipalityLoginPage(),
           '/payment': (context) => LipaHapaPage(),
         },
@@ -112,7 +119,7 @@ class MyHomePage extends StatelessWidget {
                   context,
                   'Service Provider',
                   Icons.local_car_wash,
-                  '/ServiceProviderLoginpage',
+                  '/ServiceProvider',
                 ),
                 _buildMenuItem(
                   context,
