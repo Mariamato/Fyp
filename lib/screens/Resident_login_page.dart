@@ -35,7 +35,7 @@ class ResidentLoginPage extends StatelessWidget {
     var data = {
       'phone': phoneNumber,
       'password': password,
-       'role': 'resident',
+      'role': 'resident',
     };
     var response = await http.post(
       url,
@@ -49,21 +49,72 @@ class ResidentLoginPage extends StatelessWidget {
       var jsonResponse = json.decode(response.body);
 
       // print(jsonResponse);
+      if (jsonResponse['error'] == 'Unauthorized'){
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Login Failed'),
+            content: const Text('Credentials incorrect'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+      
+      // if user not a resident
+      if (jsonResponse['userData']['role'] != 'resident') {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Authorization Failed'),
+            content: const Text('User is not a resident'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("token", jsonResponse['token']);
-      prefs.setInt("userId", jsonResponse['userData']['id']);
-      prefs.setString("name", jsonResponse['userData']['name']);
-      prefs.setString("email", jsonResponse['userData']['email']);
-      prefs.setString("phone", jsonResponse['userData']['phone']);
+      if (jsonResponse['token'] == null) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Login Failed'),
+            content: const Text('Credentials incorrect'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
 
-      // print(prefs.getString("token"));
+      if (jsonResponse['token'] != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString("token", jsonResponse['token']);
+        prefs.setInt("userId", jsonResponse['userData']['id']);
+        prefs.setString("name", jsonResponse['userData']['name']);
+        prefs.setString("email", jsonResponse['userData']['email']);
+        prefs.setString("phone", jsonResponse['userData']['phone']);
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ResidentPage()),
-      );
+        // print(prefs.getString("token"));
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ResidentPage()),
+        );
+      }
     }
+
     if (response.statusCode == 401) {
       print(response.body);
       showDialog(

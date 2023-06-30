@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:municipal_cms/controllers/task_controller.dart';
 import 'package:municipal_cms/repositories/tasks_repository.dart';
 import 'package:municipal_cms/screens/tasks/task_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:municipal_cms/models/task_model.dart' as taskModel;
+
+import '../../controllers/tasks_controller.dart';
 
 class TasksPage extends StatefulWidget {
   const TasksPage({super.key});
@@ -14,11 +18,26 @@ class TasksPage extends StatefulWidget {
 }
 
 class _TasksPageState extends State<TasksPage> {
-  final TaskController controller = TaskController();
+  // final TaskController controller = TaskController();
+  List<taskModel.Task> tasks = [];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    fetchTaskData();
+  }
+
+  void fetchTaskData() async {
+    try {
+      List<taskModel.Task> fetchedTasks = await fetchTasks();
+      setState(() {
+        tasks = fetchedTasks;
+        isLoading = false;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -27,7 +46,7 @@ class _TasksPageState extends State<TasksPage> {
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: Icon(
+          child: const Icon(
             CupertinoIcons.chevron_back,
             size: 27,
             color: Colors.white,
@@ -51,43 +70,42 @@ class _TasksPageState extends State<TasksPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     "Total Tasks",
                     style: TextStyle(
                       color: Colors.black87,
                     ),
                   ),
-                  Text(controller.totalTasks.toString()),
+                  Text(tasks.length.toString()),
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10.0,
             ),
             Expanded(
-              child: Consumer<TaskController>(
-                builder: (context, controller, _) {
-                  if (controller.isLoading) {
-                    return Center(
+              child: isLoading
+                  ? Center(
                       child: CircularProgressIndicator(),
-                    );
-                  } else {
-                    return ListView.builder(
-                      itemCount: controller.tasks.length,
+                    )
+                  : ListView.builder(
+                      itemCount: tasks.length,
                       itemBuilder: (context, index) {
-                        var task = controller.tasks[index];
+                        var task = tasks[index];
+                        DateTime parsedDate = task.parsedDueDate;
+                        String formattedDate = DateFormat('MMM dd, yyyy')
+                            .format(parsedDate)
+                            .toString();
+                        
                         return Task(
                           customerName: task.customerName!,
                           taskType: task.taskType!,
-                          dueDate: task.dueDate!,
+                          dueDate: formattedDate,
                           completedAt: task.completedAt!,
                           taskId: task.id!,
                         );
                       },
-                    );
-                  }
-                },
-              ),
+                    )
             )
           ],
         ),

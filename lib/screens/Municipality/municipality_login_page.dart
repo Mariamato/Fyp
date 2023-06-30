@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../service/api_provider.dart';
 import '../../service/visibility_provider.dart';
@@ -45,11 +46,73 @@ class MunicipalityLoginPage extends StatelessWidget {
       headers: headers,
       body: jsonEncode(data),
     );
+
     if (response.statusCode == 200) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MunicipalityPage()),
-      );
+       var jsonResponse = json.decode(response.body);
+
+      if (jsonResponse['error'] == 'Unauthorized'){
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Login Failed'),
+            content: const Text('Credentials incorrect'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+
+       // if not service provider
+      if (jsonResponse['userData']['role'] != 'admin' || jsonResponse['userData']['role'] != 'root') {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Authorization Failed'),
+            content: const Text('User is not a service provider'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+
+      // print(jsonResponse);
+      if (jsonResponse['token'] == null) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Login Failed'),
+            content: const Text('Credentials incorrect'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+
+      if (jsonResponse['token'] != null && jsonResponse['userData']['role'] == 'admin') {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString("token", jsonResponse['token']);
+        prefs.setInt("userId", jsonResponse['userData']['id']);
+        prefs.setString("name", jsonResponse['userData']['name']);
+        prefs.setString("email", jsonResponse['userData']['email']);
+        prefs.setString("phone", jsonResponse['userData']['phone']);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MunicipalityPage()),
+        );
+      }
     }
     if (response.statusCode == 401) {
       print(response.body);
@@ -73,7 +136,7 @@ class MunicipalityLoginPage extends StatelessWidget {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Login Failed'),
-          content: const Text('Credentials incorrect,Try again'),
+          content: const Text('Credentials incorrect, try again'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -124,17 +187,21 @@ class MunicipalityLoginPage extends StatelessWidget {
                           child: Consumer<visibility>(
                               builder: (context, model, _) {
                             return Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 TextFormField(
                                   controller: _contactController,
-                                  decoration: const InputDecoration(
-                                      labelText: 'Phone Number',
-                                      icon: Icon(Icons.phone_rounded)),
+                                  decoration: InputDecoration(
+                                    labelText: 'Phone Number',
+                                    prefixIcon: Icon(Icons.phone_rounded),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
                                   validator: (value) {
                                     if (value!.isEmpty) {
-                                      return 'Please enter your Phone number';
+                                      return 'Please enter your phone number';
                                     }
                                     return null;
                                   },
@@ -147,7 +214,7 @@ class MunicipalityLoginPage extends StatelessWidget {
                                         : null,
                                     decoration: InputDecoration(
                                       labelText: 'Password',
-                                      icon: const Icon(Icons.lock),
+                                      prefixIcon: const Icon(Icons.lock),
                                       suffixIcon: IconButton(
                                         onPressed: () {
                                           model.togglePasswordVisibility();
@@ -158,26 +225,42 @@ class MunicipalityLoginPage extends StatelessWidget {
                                               : Icons.visibility_off_outlined,
                                         ),
                                       ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
                                     ),
-                                    obscureText: !model.hidePassword),
-                                const SizedBox(height: 16.0),
+                                    obscureText: !model.hidePassword
+                                  ),
                                 const SizedBox(height: 16.0),
                                 TextButton(
-                                  child: const Text('Register Now'),
                                   onPressed: () => _register(context),
+                                  style: TextButton.styleFrom(
+                                    primary: Colors.blue,
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 16.0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  child: const Text("Don't have an account? Register Now"),
                                 ),
-                                Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(15.0),
-                                  alignment: Alignment.topCenter,
-                                  child: ElevatedButton(
-                                    child: const Text('Login'),
-                                    onPressed: () => {
-                                      if (_formKey.currentState!.validate())
-                                        {_login(context)}
-                                      else
-                                        {print('Invalid inputs')}
-                                    },
+                                const SizedBox(height: 10),
+                                ElevatedButton(
+                                  child: Text('Login'),
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      _login(context);
+                                    } else {
+                                      print('Invalid inputs');
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.blue,
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 16.0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
                                   ),
                                 ),
                               ],

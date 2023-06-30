@@ -11,12 +11,12 @@ import '../../service/api_provider.dart';
 
 final TextEditingController _TaskController = TextEditingController();
 final TextEditingController _LocationController = TextEditingController();
-final TextEditingController _task_description = TextEditingController();
+final TextEditingController _DescriptionController = TextEditingController();
 
 Future<void> _SubmitTask(BuildContext context) async {
   String task = _TaskController.text;
   String location = _LocationController.text;
-  String task_description = _task_description.text;
+  String task_description = _DescriptionController.text;
 
   var url = Uri.parse("$baseUrl/tasks");
   String? token = await getToken();
@@ -36,12 +36,63 @@ Future<void> _SubmitTask(BuildContext context) async {
     'status': 'new',
     'user_id': userId,
   };
-  print(data);
+
+  // print(data); // for debugging issues
+
   var response = await http.post(
     url,
     headers: headers,
     body: jsonEncode(data),
   );
+
+  // if response is okay then clear inputs and display a popup
+  if (response.statusCode == 200) {
+    var jsonResponse = json.decode(response.body);
+
+    print("DATA:_");
+    print(jsonResponse);
+
+    var taskName = jsonResponse['data']['name'];
+
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Task $taskName created successfully'),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        onVisible: () {
+          // Clear the input fields
+          _TaskController.clear();
+          _LocationController.clear();
+          _DescriptionController.clear();
+
+          // Reset the form
+          // _formKey.currentState?.reset();
+        },
+      ),
+    );
+  }
+
+  if (response.statusCode == 500) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Server error'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        onVisible: () {
+          // Clear the input fields
+          _TaskController.clear();
+          _LocationController.clear();
+          _DescriptionController.clear();
+
+          // Reset the form
+          // _formKey.currentState?.reset();
+        },
+      ),
+    );
+  }
 }
 
 class TaskPage extends StatelessWidget {
@@ -53,7 +104,7 @@ class TaskPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text("Request for a pickup")),
+        title: Text("Request for a pickup"),
       ),
       body: Container(
         height: 10000.0,
@@ -66,9 +117,7 @@ class TaskPage extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10.5, sigmaY: 10.5),
           child: Column(
             children: [
-              SizedBox(
-                height: 500.0,
-                width: 300.0,
+              Expanded(
                 child: Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -110,13 +159,13 @@ class TaskPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 16.0),
                             TextFormField(
-                              controller: _task_description,
+                              controller: _DescriptionController,
                               decoration: const InputDecoration(
                                 labelText: 'Task description:',
                               ),
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return 'Please enter task required';
+                                  return 'Please enter task description';
                                 }
                                 return null;
                               },
@@ -129,6 +178,13 @@ class TaskPage extends StatelessWidget {
                                 }
                               },
                               child: const Text('Submit'),
+                              // style: ElevatedButton.styleFrom(
+                              //   primary: Colors.blue,
+                              //   padding: EdgeInsets.symmetric(vertical: 16.0),
+                              //   shape: RoundedRectangleBorder(
+                              //     borderRadius: BorderRadius.circular(10.0),
+                              //   ),
+                              // ),
                             ),
                           ],
                         ),
@@ -137,15 +193,22 @@ class TaskPage extends StatelessWidget {
                   ),
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const TasksPage()),
-                  );
-                },
-                child: const Text('see Task history here'),
+              const SizedBox(height: 16.0),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TasksPage()),
+                    );
+                  },
+                  child: const Text('View Tasks'),
+                ),
               ),
+              // const SizedBox(height: 16.0),
             ],
           ),
         ),

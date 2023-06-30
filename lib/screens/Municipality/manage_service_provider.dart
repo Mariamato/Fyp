@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:municipal_cms/controllers/task_controller.dart';
 import 'package:municipal_cms/repositories/tasks_repository.dart';
+import 'package:municipal_cms/screens/Municipality/provider_widget.dart';
 import 'package:municipal_cms/screens/tasks/task_widget.dart';
 import 'package:provider/provider.dart';
+
+import '../../controllers/service_provider_controller.dart';
+import '../../models/service_provider_model.dart';
 
 class ManageServiceProvider extends StatefulWidget {
   const ManageServiceProvider({super.key});
@@ -15,11 +19,26 @@ class ManageServiceProvider extends StatefulWidget {
 }
 
 class _ManageServiceProviderState extends State<ManageServiceProvider> {
-  final TaskController controller = TaskController();
+  List<ServiceProvider> serviceProviders = [];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    fetchServiceProvidersData();
+  }
+
+  void fetchServiceProvidersData() async {
+    try {
+      List<ServiceProvider> fetchedServiceProviders =
+          await fetchServiceProviders();
+      setState(() {
+        serviceProviders = fetchedServiceProviders;
+        isLoading = false;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -43,56 +62,62 @@ class _ManageServiceProviderState extends State<ManageServiceProvider> {
         child: Column(
           children: [
             Container(
-              padding:const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
-                border:
-                    const Border(bottom: BorderSide(color: Colors.blue, width: 1)),
+                border: const Border(
+                    bottom: BorderSide(color: Colors.blue, width: 1)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                 const Text(
+                  const Text(
                     "Service provider list",
                     style: TextStyle(
                       color: Colors.black87,
                     ),
                   ),
-                  Text(controller.totalTasks.toString()),
+                  Text(serviceProviders.length.toString()),
                 ],
               ),
             ),
-          const  SizedBox(
+            const SizedBox(
               height: 10.0,
             ),
             Expanded(
-              child: Consumer<TaskController>(
-                builder: (context, controller, _) {
-                  if (controller.isLoading) {
-                    return const Center(
+              child: isLoading
+                  ? const Center(
                       child: CircularProgressIndicator(),
-                    );
-                  } else {
-                    return ListView.builder(
-                      itemCount: controller.tasks.length,
+                    )
+                  : ListView.builder(
+                      itemCount: serviceProviders.length,
                       itemBuilder: (context, index) {
-                        var task = controller.tasks[index];
-                        return Task(
-                          customerName: task.customerName!,
-                          taskType: task.taskType!,
-                          dueDate: task.dueDate!,
-                          completedAt: task.completedAt!,
-                          taskId: task.id!,
+                        var serviceP = serviceProviders[index];
+                        return ProviderWidget(
+                          name: serviceP.name!,
+                          email: serviceP.email!,
+                          phone: serviceP.phoneNumber!,
+                          address: serviceP.address!,
+                          municipality: serviceP.municipality!,
+                          speciality: serviceP.speciality!,
+                          providerId: serviceP.id!,
                         );
                       },
-                    );
-                  }
-                },
-              ),
+                    ),
             )
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () => {
+            Navigator.pop(context),
+          },
+          backgroundColor: Colors.blue,
+          child: Icon(
+            CupertinoIcons.add,
+            color: Colors.white,
+          ),
+        )
     );
   }
 }

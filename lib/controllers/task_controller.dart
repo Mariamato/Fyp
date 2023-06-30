@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:municipal_cms/models/task_model.dart';
+import 'package:municipal_cms/models/task_model_dio.dart';
 import 'package:municipal_cms/repositories/tasks_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

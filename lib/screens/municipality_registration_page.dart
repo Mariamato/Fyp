@@ -10,6 +10,7 @@ import '../../service/api_provider.dart';
 import '../../service/visibility_provider.dart';
 
 class MunicipalityRegistrationPage extends StatelessWidget {
+  final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _municipalityNameController =
@@ -25,6 +26,7 @@ class MunicipalityRegistrationPage extends StatelessWidget {
   MunicipalityRegistrationPage({super.key});
 
   void _register(BuildContext context) async {
+    String userName = _userNameController.text;
     String password = _passwordController.text;
     String confirmPassword = _confirmPasswordController.text;
     String email = _emailController.text;
@@ -35,26 +37,36 @@ class MunicipalityRegistrationPage extends StatelessWidget {
     // var csrfToken = csrfResponse.headers['set-cookie'] ?? '';
 
     var url = Uri.parse("$baseUrl/register");
+
     var headers = <String, String>{
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       // 'X-XSRF-TOKEN': csrfToken,
       'user_type': 'Municipality'
     };
+
     var data = {
+      'name': userName,
       'email': email,
       'password': password,
       'password_confirmation': confirmPassword,
       'address': location,
       'phone': phoneNumber,
-      'municipality_name': municipality,
-      'role':'municipality'
+      'municipality': municipality,
+      'role': 'admin'
     };
+
+    // print(data);
+    // return;
+
     var response = await http.post(
       url,
       headers: headers,
       body: jsonEncode(data),
     );
+
+    print(response.body);
+
     if (response.statusCode == 200) {
       showDialog(
           context: context,
@@ -98,7 +110,7 @@ class MunicipalityRegistrationPage extends StatelessWidget {
       create: (_) => visibility(),
       child: Scaffold(
           appBar: AppBar(
-            title: const Text('Jisajili '),
+            title: const Text('Municipality Registration'),
           ),
           body: Container(
             height: 10000.0,
@@ -121,19 +133,20 @@ class MunicipalityRegistrationPage extends StatelessWidget {
                         child: SingleChildScrollView(
                           child: Form(
                               key: _formKey,
-                              child: Consumer<visibility>(builder: (context, model, _) {
+                              child: Consumer<visibility>(
+                                  builder: (context, model, _) {
                                 return Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
                                       TextFormField(
-                                        controller: _municipalityNameController,
+                                        controller: _userNameController,
                                         decoration: const InputDecoration(
-                                            labelText: 'Municipality Name',
-                                            icon: Icon(Icons.location_city)),
+                                            labelText: 'User Name',
+                                            icon: Icon(Icons.person)),
                                         validator: (value) {
                                           if (value!.isEmpty) {
-                                            return 'Please enter your Municipality Name';
+                                            return 'Please enter your User Name';
                                           }
                                           return null;
                                         },
@@ -148,72 +161,8 @@ class MunicipalityRegistrationPage extends StatelessWidget {
                                             TextInputType.emailAddress,
                                         validator: (input) =>
                                             input!.contains("@.")
-                                                ? 'Email Id should be valid'
+                                                ? 'Email should be valid'
                                                 : null,
-                                      ),
-                                      const SizedBox(height: 16.0),
-                                       TextFormField(
-                                        controller: _passwordController,
-                                        validator: (input) => input!.length < 8
-                                            ? 'Password should atleast be with 8 characters'
-                                            : null,
-                                        decoration: InputDecoration(
-                                          labelText: 'Password',
-                                          icon: const Icon(Icons.lock),
-                                          suffixIcon: IconButton(
-                                            icon: Icon(
-                                              model.hidePassword
-                                                  ? Icons
-                                                      .visibility
-                                                  : Icons.visibility_off_outlined,
-                                            ),
-                                            onPressed: () {
-                                              model.togglePasswordVisibility();
-                                            },
-                                          ),
-                                        ),
-                                        obscureText: !model.hidePassword,
-                                      ),
-                                      TextFormField(
-                                        controller: _confirmPasswordController,
-                                        decoration: InputDecoration(
-                                          labelText: 'Confirm password',
-                                          icon: const Icon(Icons.lock),
-                                           suffixIcon: IconButton(
-                                            icon: Icon(
-                                              model.hidePassword
-                                                  ? Icons
-                                                      .visibility
-                                                  : Icons.visibility_off_outlined,
-                                            ),
-                                            onPressed: () {
-                                              model.togglePasswordVisibility();
-                                            },
-                                          ),
-                                        ),
-                                        
-                                        obscureText: !model.hidePassword,
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return 'Password entered does not match';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                      TextFormField(
-                                        controller: _physicalAddressController,
-                                        decoration: const InputDecoration(
-                                            labelText: 'location',
-                                            icon: Icon(Icons.mail)),
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return 'Please enter your Location';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                      const SizedBox(
-                                        height: 20.0,
                                       ),
                                       TextFormField(
                                         controller: _contactController,
@@ -227,6 +176,82 @@ class MunicipalityRegistrationPage extends StatelessWidget {
                                           return null;
                                         },
                                       ),
+                                      TextFormField(
+                                        controller: _municipalityNameController,
+                                        decoration: const InputDecoration(
+                                            labelText: 'Municipality Name',
+                                            icon: Icon(Icons.location_city)),
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return 'Please enter your Municipality Name';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      TextFormField(
+                                        controller: _physicalAddressController,
+                                        decoration: const InputDecoration(
+                                            labelText: 'Location',
+                                            icon: Icon(Icons.mail)),
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return 'Please enter your Location';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      // 0742818207
+                                      const SizedBox(height: 16.0),
+                                      TextFormField(
+                                        controller: _passwordController,
+                                        validator: (input) => input!.length < 8
+                                            ? 'Password should atleast be with 8 characters'
+                                            : null,
+                                        decoration: InputDecoration(
+                                          labelText: 'Password',
+                                          icon: const Icon(Icons.lock),
+                                          suffixIcon: IconButton(
+                                            icon: Icon(
+                                              model.hidePassword
+                                                  ? Icons.visibility
+                                                  : Icons
+                                                      .visibility_off_outlined,
+                                            ),
+                                            onPressed: () {
+                                              model.togglePasswordVisibility();
+                                            },
+                                          ),
+                                        ),
+                                        obscureText: !model.hidePassword,
+                                      ),
+                                      TextFormField(
+                                        controller: _confirmPasswordController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Confirm password',
+                                          icon: const Icon(Icons.lock),
+                                          suffixIcon: IconButton(
+                                            icon: Icon(
+                                              model.hidePassword
+                                                  ? Icons.visibility
+                                                  : Icons
+                                                      .visibility_off_outlined,
+                                            ),
+                                            onPressed: () {
+                                              model.togglePasswordVisibility();
+                                            },
+                                          ),
+                                        ),
+                                        obscureText: !model.hidePassword,
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return 'Password entered does not match';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      const SizedBox(
+                                        height: 20.0,
+                                      ),
                                       Container(
                                         width: double.infinity,
                                         padding: const EdgeInsets.all(15.0),
@@ -234,7 +259,12 @@ class MunicipalityRegistrationPage extends StatelessWidget {
                                         child: ElevatedButton(
                                           child: const Text('Register'),
                                           onPressed: () {
-                                            _register(context);
+                                            if (_formKey.currentState!
+                                                .validate()) {
+                                              _register(context);
+                                            } else {
+                                              print('Invalid inputs');
+                                            }
                                           },
                                         ),
                                       )
@@ -250,6 +280,4 @@ class MunicipalityRegistrationPage extends StatelessWidget {
           )),
     );
   }
-
-  void setState(Null Function() param0) {}
 }

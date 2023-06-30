@@ -1,6 +1,6 @@
 import 'package:municipal_cms/service/api_provider.dart';
 
-import '../models/task_model.dart';
+import '../models/task_model_dio.dart';
 
 class TasksRespository {
   void getTasks({

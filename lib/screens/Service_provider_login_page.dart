@@ -7,6 +7,7 @@ import 'package:municipal_cms/screens/service_provider_page.dart';
 import 'package:municipal_cms/screens/serviceprovider_registration_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../service/api_provider.dart';
 import '../service/visibility_provider.dart';
@@ -43,13 +44,77 @@ class ServiceProviderLoginPage extends StatelessWidget {
       headers: headers,
       body: jsonEncode(data),
     );
-    
+
+
     if (response.statusCode == 200) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ServiceProviderPage()),
-      );
+      var jsonResponse = json.decode(response.body);
+
+      if (jsonResponse['error'] == 'Unauthorized'){
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Login Failed'),
+            content: const Text('Credentials incorrect'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+
+      // if not service provider
+      if (jsonResponse['userData']['role'] != 'service_provider') {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Authorization Failed'),
+            content: const Text('User is not a service provider'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+
+      // print(jsonResponse);
+      if (jsonResponse['token'] == null) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Login Failed'),
+            content: const Text('Credentials incorrect'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+
+      if (jsonResponse['token'] != null &&
+          jsonResponse['userData']['role'] == 'service_provider') {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString("token", jsonResponse['token']);
+        prefs.setInt("userId", jsonResponse['userData']['id']);
+        prefs.setString("name", jsonResponse['userData']['name']);
+        prefs.setString("email", jsonResponse['userData']['email']);
+        prefs.setString("phone", jsonResponse['userData']['phone']);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ServiceProviderPage()),
+        );
+      }
     }
+
     if (response.statusCode == 401) {
       print(response.body);
       showDialog(
@@ -242,16 +307,17 @@ class ServiceProviderLoginPage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(10.0),
                                     ),
                                   ),
-                                  child: const Text("Don't have an account? Register Now"),
+                                  child: const Text(
+                                      "Don't have an account? Register Now"),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 ElevatedButton(
                                   child: Text('Login'),
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       _login(context);
                                     } else {
-                                      print('Invalid input');
+                                      print('Invalid inputs');
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(
