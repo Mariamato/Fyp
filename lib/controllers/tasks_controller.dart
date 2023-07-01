@@ -31,6 +31,7 @@ Future<List<Task>> fetchTasks() async {
         priority: taskData['priority'],
         dueDate: taskData['due_date'],
         completedAt: taskData['completed_at'],
+        location: taskData['location'],
       );
       tasks.add(task);
     }

@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
-class Task extends StatelessWidget {
-  final String customerName;
-  final String taskType;
-  final String dueDate;
-  final String completedAt;
-  final String location;
-  final int taskId;
+class ReportWidget extends StatelessWidget {
+  final int reportId;
+  final String task;
+  final String userName;
+  final String dateOfService;
+  final String timeOfService;
+  final String status;
 
-  const Task({
-    Key? key,
-    required this.customerName,
-    required this.taskType,
-    required this.dueDate,
-    required this.completedAt,
-    required this.location,
-    required this.taskId,
-  }) : super(key: key);
+  const ReportWidget(
+      {Key? key,
+      required this.reportId,
+      required this.task,
+      required this.userName,
+      required this.dateOfService,
+      required this.timeOfService,
+      required this.status})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +38,13 @@ class Task extends StatelessWidget {
               backgroundColor: Colors.grey[200],
               radius: 25.0,
               child: const Padding(
-                  padding: EdgeInsets.all(6.0),
-                  child: Icon(
-                    Icons.task,
-                    size: 20.0,
-                    color: Colors.blue,
-                  )),
+                padding: EdgeInsets.all(6.0),
+                child: Icon(
+                  Icons.book,
+                  size: 20.0,
+                  color: Colors.blue,
+                )
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
@@ -52,7 +53,7 @@ class Task extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    customerName,
+                    "Task: $task",
                     style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 16.0,
@@ -60,7 +61,7 @@ class Task extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Type: $taskType',
+                    "Done by: $userName",
                     style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 14.0,
@@ -68,19 +69,11 @@ class Task extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Due Date: $dueDate',
+                    "Done on: $dateOfService",
                     style: const TextStyle(
                       color: Colors.grey,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  Text(
-                    'Location: $location',
-                    style: const TextStyle(
-                      color: Colors.blue,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w400,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w300,
                     ),
                   ),
                 ],

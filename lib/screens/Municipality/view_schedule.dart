@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:municipal_cms/controllers/task_controller.dart';
-import 'package:municipal_cms/repositories/tasks_repository.dart';
-import 'package:municipal_cms/screens/tasks/task_widget.dart';
-import 'package:provider/provider.dart';
+import 'package:municipal_cms/controllers/schedule_controller.dart';
+import 'package:municipal_cms/screens/Municipality/schedule_widget.dart';
+
+import 'package:municipal_cms/models/schedule_model.dart' as SModel;
 
 class ViewSchedule extends StatefulWidget {
   const ViewSchedule({super.key});
@@ -15,11 +14,25 @@ class ViewSchedule extends StatefulWidget {
 }
 
 class _ViewScheduleState extends State<ViewSchedule> {
-  final TaskController controller = TaskController();
+  List<SModel.Schedule> schedules = [];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    fetchScheduleData();
+  }
+
+  void fetchScheduleData() async {
+    try {
+      List<SModel.Schedule> fetchedSchedules = await fetchSchedules();
+      setState(() {
+        schedules = fetchedSchedules;
+        isLoading = false;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -36,59 +49,50 @@ class _ViewScheduleState extends State<ViewSchedule> {
         ),
         elevation: 0,
         centerTitle: true,
-        title: const Text("List of schedule"),
+        title: const Text("Schedules List"),
       ),
       body: SafeArea(
         minimum: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           children: [
             Container(
-              padding:const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
-                border:
-                    const Border(bottom: BorderSide(color: Colors.blue, width: 1)),
+                border: const Border(
+                    bottom: BorderSide(color: Colors.blue, width: 1)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                 const Text(
-                    "Total schedule",
+                  const Text(
+                    "Total schedules",
                     style: TextStyle(
                       color: Colors.black87,
                     ),
                   ),
-                  Text(controller.totalTasks.toString()),
+                  Text(schedules.length.toString()),
                 ],
               ),
             ),
-          const  SizedBox(
+            const SizedBox(
               height: 10.0,
             ),
             Expanded(
-              child: Consumer<TaskController>(
-                builder: (context, controller, _) {
-                  if (controller.isLoading) {
-                    return const Center(
+              child: isLoading
+                  ? const Center(
                       child: CircularProgressIndicator(),
-                    );
-                  } else {
-                    return ListView.builder(
-                      itemCount: controller.tasks.length,
+                    )
+                  : ListView.builder(
+                      itemCount: schedules.length,
                       itemBuilder: (context, index) {
-                        var task = controller.tasks[index];
-                        return Task(
-                          customerName: task.customerName!,
-                          taskType: task.taskType!,
-                          dueDate: task.dueDate!,
-                          completedAt: task.completedAt!,
-                          taskId: task.id!,
-                        );
+                        var schedule = schedules[index];
+                        return ScheduleWidget(
+                            scheduleId: schedule.id!,
+                            filePath: schedule.filePath!,
+                            uploadedBy: schedule.uploadedBy!);
                       },
-                    );
-                  }
-                },
-              ),
+                    ),
             )
           ],
         ),

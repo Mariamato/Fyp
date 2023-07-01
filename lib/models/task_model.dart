@@ -6,6 +6,7 @@ class Task {
   String? priority;
   String? dueDate;
   String? completedAt;
+  String? location;
 
   Task({
     this.id,
@@ -15,6 +16,7 @@ class Task {
     this.priority,
     this.dueDate,
     this.completedAt,
+    this.location,
   });
 
   DateTime get parsedDueDate {

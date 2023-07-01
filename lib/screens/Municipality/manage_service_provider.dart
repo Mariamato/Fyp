@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:municipal_cms/controllers/task_controller.dart';
 import 'package:municipal_cms/repositories/tasks_repository.dart';
+import 'package:municipal_cms/screens/Municipality/create_service_provider.dart';
 import 'package:municipal_cms/screens/Municipality/provider_widget.dart';
 import 'package:municipal_cms/screens/tasks/task_widget.dart';
 import 'package:provider/provider.dart';
@@ -110,7 +111,10 @@ class _ManageServiceProviderState extends State<ManageServiceProvider> {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () => {
-            Navigator.pop(context),
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CreateServiceProviderPage()),
+            ),
           },
           backgroundColor: Colors.blue,
           child: Icon(

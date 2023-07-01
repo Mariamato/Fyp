@@ -104,7 +104,7 @@ class TaskPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Request for a pickup"),
+        title: const Text("Request for a pickup"),
       ),
       body: Container(
         height: 10000.0,
