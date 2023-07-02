@@ -8,7 +8,7 @@ class MunicipalityPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Municipality"),
+          title: const Text("Municipality"),
         ),
         body: Container(
             height: 10000.0,

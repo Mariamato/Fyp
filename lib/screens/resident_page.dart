@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void _ViewSchedule(BuildContext context) {
   // Add view schedule functionality here
@@ -25,45 +24,11 @@ class ResidentPage extends StatelessWidget {
           ),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-            // child: GridView.count(
-            //   crossAxisCount: 1,
-            //   childAspectRatio:3.4,
-            //   children: [
-            //     Column(
-            //       children: [
-            //         Padding(
-            //           padding: const EdgeInsets.all(8.0),
-            //           child: Center(
-            //             child: SizedBox(
-            //               width: 500.0,
-            //               height: 50.0,
-            //               child: TextButton(
-            //                   onPressed: (() => _ViewSchedule(context)),
-            //                   child: const Text("view schedule here...")),
-            //             ),
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-              
-            //     _buildMenuItem(
-            //       context,
-            //       'Request for the task here',
-            //       Icons.task,
-            //       '/Task',
-            //     ),
-            //     _buildMenuItem(
-            //       context,
-            //       'Payment',
-            //       Icons.payment,
-            //       '/payment',
-            //     ),
-            //   ],
-            // ),
+           
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(
+               const SizedBox(
                   height: 16,
                 ),
                 Expanded(

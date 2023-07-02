@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:municipal_cms/construction_page.dart';
 import 'package:municipal_cms/controllers/task_controller.dart';
 import 'package:municipal_cms/screens/Service_provider_login_page.dart';
 import 'package:municipal_cms/screens/lipia_hapa.dart';
@@ -34,12 +33,12 @@ class MyApp extends StatelessWidget {
         home: MyHomePage(),
         initialRoute: '/',
         routes: {
-         '/Report':(context) => ViewReport(),
-         '/Schedule':(context) => ViewSchedule(),
-         '/manage':(context) =>  ManageServiceProvider(),
+         '/Report':(context) =>const  ViewReport(),
+         '/Schedule':(context) =>  ViewSchedule(),
+         '/schedules':(context) =>  ViewSchedule(),
+         '/manage':(context) =>  const ManageServiceProvider(),
           '/tasks': (context) => TaskPage(),
-          '/payments': (context) => ConstructionPage(),
-          '/schedules': (context) => ConstructionPage(),
+          '/payments': (context) => LipaHapaPage(),
           '/resident': (context) => ResidentLoginPage(),
           '/ServiceProvider': (context) => ServiceProviderLoginPage(),
           '/Municipality': (context) => MunicipalityLoginPage(),

@@ -22,9 +22,6 @@ class ResidentLoginPage extends StatelessWidget {
   void _login(BuildContext context) async {
     String password = _passwordController.text;
     String phoneNumber = _contactController.text;
-    // var csrfResponse = await http.get(Uri.parse('/sanctum/csrf-cookie'));
-    // var csrfToken = csrfResponse.headers['set-cookie'] ?? '';
-
     var url = Uri.parse("$baseUrl/login");
     var headers = <String, String>{
       'Content-Type': 'application/json',
@@ -232,7 +229,7 @@ class ResidentLoginPage extends StatelessWidget {
                                   ),
                                   obscureText: !model.hidePassword,
                                 ),
-                                SizedBox(height: 16.0),
+                              const  SizedBox(height: 16.0),
                                 TextButton(
                                   child: Text(
                                       "Don't have an account? Register Now"),

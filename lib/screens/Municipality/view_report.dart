@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:municipal_cms/controllers/task_controller.dart';
-import 'package:municipal_cms/repositories/tasks_repository.dart';
 import 'package:municipal_cms/screens/tasks/task_widget.dart';
 import 'package:provider/provider.dart';
 
