@@ -59,6 +59,7 @@ class Task extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                  const SizedBox(height: 4.0),
                   Text(
                     'Type: $taskType',
                     style: const TextStyle(
@@ -67,22 +68,40 @@ class Task extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Text(
-                    'Due Date: $dueDate',
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  Text(
-                    'Location: $location',
-                    style: const TextStyle(
-                      color: Colors.blue,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
+                  const SizedBox(height: 4.0),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.calendar_today,
+                        color: Colors.grey,
+                        size: 14.0,
+                      ),
+                      const SizedBox(width: 4.0), // Adjust the width as needed
+                      Text(
+                        dueDate,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      const SizedBox(width: 16.0), // Adjust the width as needed
+                      const Icon(
+                        Icons.location_on,
+                        color: Colors.grey,
+                        size: 14.0,
+                      ),
+                      const SizedBox(width: 4.0), // Adjust the width as needed
+                      Text(
+                        location,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),

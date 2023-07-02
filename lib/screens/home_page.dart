@@ -6,6 +6,7 @@ import 'package:municipal_cms/controllers/task_controller.dart';
 import 'package:municipal_cms/screens/Service_provider_login_page.dart';
 import 'package:municipal_cms/screens/lipia_hapa.dart';
 import 'package:municipal_cms/screens/Municipality/municipality_login_page.dart';
+import 'package:municipal_cms/screens/payments/payments_list_page.dart';
 import 'package:municipal_cms/screens/tasks/task_page.dart';
 import 'package:provider/provider.dart';
 import 'Municipality/manage_service_provider.dart';
@@ -38,7 +39,8 @@ class MyApp extends StatelessWidget {
          '/Schedule':(context) => ViewSchedule(),
          '/manage':(context) =>  ManageServiceProvider(),
           '/tasks': (context) => TaskPage(),
-          '/payments': (context) => ConstructionPage(),
+          // '/payments': (context) => ConstructionPage(),
+          '/payments': (context) => PaymentsListPage(),
           '/schedules': (context) => ConstructionPage(),
           '/resident': (context) => ResidentLoginPage(),
           '/ServiceProvider': (context) => ServiceProviderLoginPage(),

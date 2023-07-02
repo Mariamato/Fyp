@@ -38,13 +38,12 @@ class ReportWidget extends StatelessWidget {
               backgroundColor: Colors.grey[200],
               radius: 25.0,
               child: const Padding(
-                padding: EdgeInsets.all(6.0),
-                child: Icon(
-                  Icons.book,
-                  size: 20.0,
-                  color: Colors.blue,
-                )
-              ),
+                  padding: EdgeInsets.all(6.0),
+                  child: Icon(
+                    Icons.book,
+                    size: 20.0,
+                    color: Colors.blue,
+                  )),
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
@@ -68,13 +67,37 @@ class ReportWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Text(
-                    "Done on: $dateOfService",
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w300,
-                    ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.calendar_today,
+                        color: Colors.grey,
+                        size: 14.0,
+                      ),
+                      const SizedBox(width: 4.0),
+                      Text(
+                        "Done on: $dateOfService",
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      const SizedBox(width: 16.0),
+                      const Icon(
+                        Icons.timer_sharp,
+                        color: Colors.grey,
+                        size: 14.0,
+                      ),
+                      Text(
+                        "Time: $timeOfService",
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

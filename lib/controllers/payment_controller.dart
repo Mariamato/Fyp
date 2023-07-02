@@ -1,15 +1,16 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:municipal_cms/models/report_model.dart';
+
+import 'package:municipal_cms/models/payment_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../service/api_provider.dart';
 
-Future<List<Report>> fetchReports() async {
+Future<List<Payment>> fetchPayments() async {
   var prefs = await SharedPreferences.getInstance();
 
-  const String apiUrl = '$baseUrl/reports';
+  const String apiUrl = '$baseUrl/payments';
   final String? token = prefs.getString("token");
 
   final response = await http.get(
@@ -21,22 +22,21 @@ Future<List<Report>> fetchReports() async {
 
   if (response.statusCode == 200) {
     final jsonData = json.decode(response.body)['data'];
-    List<Report> reports = [];
+    List<Payment> payments = [];
 
     for (var data in jsonData) {
-      Report report = Report(
+      Payment payment = Payment(
         id: data['id'],
-        task: data['task'],
-        userName: data['user'],
-        dateOfService: data['date_of_service'],
-        timeOfService: data['time_of_service'],
-        status: data['status'],
+        refNo: data['reference_number'],
+        controlNo: data['control_number'],
+        amount: data['amount'],
+        method: data['payment_method'],
       );
-      reports.add(report);
+      payments.add(payment);
     }
 
-    return reports;
+    return payments;
   } else {
-    throw Exception('Failed to fetch reports');
+    throw Exception('Failed to fetch payments');
   }
 }
