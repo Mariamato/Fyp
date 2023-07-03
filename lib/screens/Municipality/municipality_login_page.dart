@@ -28,7 +28,7 @@ class MunicipalityLoginPage extends StatelessWidget {
     // var csrfToken = csrfResponse.headers['set-cookie'] ?? '';
 
     // var url = Uri.parse('http://127.0.0.1:8000/api/login');
-    var url = Uri.parse("$baseUrl/login");;
+    var url = Uri.parse("$baseUrl/login");
     var headers = <String, String>{
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -192,6 +192,7 @@ class MunicipalityLoginPage extends StatelessWidget {
                               children: [
                                 TextFormField(
                                   controller: _contactController,
+                                  keyboardType: TextInputType.phone,
                                   decoration: InputDecoration(
                                     labelText: 'Phone Number',
                                     prefixIcon: Icon(Icons.phone_rounded),

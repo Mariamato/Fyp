@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
-class Task extends StatelessWidget { 
-  final String customerName;
-  final String taskType;
-  final String dueDate;
-  final String completedAt;
-  final String location;
-  final int taskId;
+class ReportWidget extends StatelessWidget {
+  final int reportId;
+  final String task;
+  final String userName;
+  final String dateOfService;
+  final String timeOfService;
+  final String status;
 
-  const Task({
-    Key? key,
-    required this.customerName,
-    required this.taskType,
-    required this.dueDate,
-    required this.completedAt,
-    required this.location,
-    required this.taskId,
-  }) : super(key: key);
+  const ReportWidget(
+      {Key? key,
+      required this.reportId,
+      required this.task,
+      required this.userName,
+      required this.dateOfService,
+      required this.timeOfService,
+      required this.status})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +40,7 @@ class Task extends StatelessWidget {
               child: const Padding(
                   padding: EdgeInsets.all(6.0),
                   child: Icon(
-                    Icons.task,
+                    Icons.book,
                     size: 20.0,
                     color: Colors.blue,
                   )),
@@ -54,23 +52,21 @@ class Task extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    customerName,
+                    "Task: $task",
                     style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 16.0,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 4.0),
                   Text(
-                    'Type: $taskType',
+                    "Done by: $userName",
                     style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 14.0,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  const SizedBox(height: 4.0),
                   Row(
                     children: [
                       const Icon(
@@ -78,32 +74,31 @@ class Task extends StatelessWidget {
                         color: Colors.grey,
                         size: 14.0,
                       ),
-                      const SizedBox(width: 4.0), // Adjust the width as needed
+                      const SizedBox(width: 4.0),
                       Text(
-                        dueDate,
+                        "Done on: $dateOfService",
                         style: const TextStyle(
                           color: Colors.grey,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w300,
                         ),
                       ),
-                      const SizedBox(width: 16.0), // Adjust the width as needed
+                      const SizedBox(width: 16.0),
                       const Icon(
-                        Icons.location_on,
+                        Icons.timer_sharp,
                         color: Colors.grey,
                         size: 14.0,
                       ),
-                      const SizedBox(width: 4.0), // Adjust the width as needed
                       Text(
-                        location,
+                        "Time: $timeOfService",
                         style: const TextStyle(
                           color: Colors.grey,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w300,
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

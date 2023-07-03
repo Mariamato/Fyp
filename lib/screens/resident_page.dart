@@ -31,32 +31,29 @@ class ResidentPage extends StatelessWidget {
                const SizedBox(
                   height: 16,
                 ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        children: [
-                          _buildMenuItem(
-                            context,
-                            'Tasks',
-                            Icons.task,
-                            '/tasks',
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          _buildMenuItem(
-                            context,
-                            'Payments',
-                            Icons.payment,
-                            '/payments',
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                Column(
+                  children: [
+                    Column(
+                      children: [
+                        _buildMenuItem(
+                          context,
+                          'Tasks',
+                          Icons.task,
+                          '/tasks',
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        _buildMenuItem(
+                          context,
+                          'Payments',
+                          Icons.payment,
+                          '/payments',
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 Expanded(
                   child: Row(
@@ -72,16 +69,7 @@ class ResidentPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Column(
-                        children: [
-                          _buildMenuItem(
-                            context,
-                            'Settings',
-                            Icons.settings,
-                            '/settings',
-                          ),
-                        ],
-                      ),
+                     
                     ],
                   ),
                 ),

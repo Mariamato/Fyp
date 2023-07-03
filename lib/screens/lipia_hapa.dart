@@ -9,23 +9,26 @@ import '../service/api_provider.dart';
 
 class LipaHapaPage extends StatelessWidget {
   final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   void _lipia(BuildContext context) async {
     String phoneNumber = _phoneNumberController.text;
+     String amount = _amountController.text;
     var url = Uri.parse("$baseUrl/payments");
     String? token = await getToken();
     var headers = <String, String>{
       'Content-Type': 'application/json',
       'Accept': 'appliction/json',
       'Authorization': 'Bearer $token',
-      
+      'role':'resident'
     };
     int? userId = await getUserId();
     var data = {
       'phone': phoneNumber,
-      'role': 'resident',
+      'amount': amount,
       'user_id': userId,
+      'method_id':1,
     };
     print(data);
     var response = await http.post(
@@ -73,6 +76,24 @@ class LipaHapaPage extends StatelessWidget {
                                       fontWeight: FontWeight.bold,
                                       fontStyle: FontStyle.italic,
                                       letterSpacing: 1.5),
+                                ),
+                                const SizedBox(
+                                  height: 20.0,
+                                ),
+                                 TextFormField(
+                                  controller: _amountController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Amount',
+                                  ),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter valid Amount';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 20.0,
                                 ),
                                 TextFormField(
                                   controller: _phoneNumberController,

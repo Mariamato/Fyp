@@ -60,8 +60,8 @@ class _TasksPageState extends State<TasksPage> {
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
-                border:
-                    Border(bottom: BorderSide(color: Colors.blue, width: 1)),
+                border: const Border(
+                    bottom: BorderSide(color: Colors.blue, width: 1)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,29 +80,29 @@ class _TasksPageState extends State<TasksPage> {
               height: 10.0,
             ),
             Expanded(
-              child: isLoading
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : ListView.builder(
-                      itemCount: tasks.length,
-                      itemBuilder: (context, index) {
-                        var task = tasks[index];
-                        DateTime parsedDate = task.parsedDueDate;
-                        String formattedDate = DateFormat('MMM dd, yyyy')
-                            .format(parsedDate)
-                            .toString();
-                        
-                        return Task(
-                          customerName: task.customerName!,
-                          taskType: task.taskType!,
-                          dueDate: formattedDate,
-                          completedAt: task.completedAt!,
-                          taskId: task.id!,
-                        );
-                      },
-                    )
-            )
+                child: isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.builder(
+                        itemCount: tasks.length,
+                        itemBuilder: (context, index) {
+                          var task = tasks[index];
+                          DateTime parsedDate = task.parsedDueDate;
+                          String formattedDate = DateFormat('MMM dd, yyyy')
+                              .format(parsedDate)
+                              .toString();
+
+                          return Task(
+                            customerName: task.customerName!,
+                            taskType: task.taskType!,
+                            dueDate: formattedDate,
+                            completedAt: task.completedAt!,
+                            location: task.location!,
+                            taskId: task.id!,
+                          );
+                        },
+                      ))
           ],
         ),
       ),

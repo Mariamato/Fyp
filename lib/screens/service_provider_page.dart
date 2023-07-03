@@ -11,51 +11,15 @@ import '../utils/util.dart';
 
 final TextEditingController _taskController = TextEditingController();
 final TextEditingController _locationController = TextEditingController();
-final TextEditingController _dayController = TextEditingController();
-final TextEditingController _timeController = TextEditingController();
 
 late TextEditingController _dController = TextEditingController();
 late TextEditingController _tController = TextEditingController();
 
-late String? _fileName; // Maria's
-
-// Maria's Code
-Future<void> _selectFile(BuildContext context) async {
-  FilePickerResult? result = await FilePicker.platform.pickFiles();
-  if (result != null && result.files.isNotEmpty) {
-    _fileName = result.files.single.name;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('File selected: $_fileName'),
-      ),
-    );
-  }
-}
-
-Future<void> _uploadFile(BuildContext context) async {
-  if (_fileName != null) {
-    // Perform file upload logic here
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('File uploaded: $_fileName'),
-      ),
-    );
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('No file selected'),
-      ),
-    );
-  }
-}
-
-// End of Maria's Code
+late String? _fileName; 
 
 Future _SubmitReport(BuildContext context) async {
   String task = _taskController.text;
   String location = _locationController.text;
-  // String day = _dayController.text;
-  // String time = _timeController.text;
   String day = _dController.text;
   String time = _tController.text;
 
@@ -198,10 +162,16 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
 
   // File Manipulation
   File? _selectedFile;
+Future<void> _pickFile() async {
+final result = await FilePicker.platform.pickFiles(type: FileType.any, allowMultiple: false);
 
-  // Patrick's Code
-  Future<void> _pickFile() async {
-    final result = await FilePicker.platform.pickFiles();
+if (result != null && result.files.isNotEmpty) {
+  final fileBytes = result.files.first.bytes;
+  final fileName = result.files.first.name;
+  
+  // upload file
+ // await FirebaseStorage.instance.ref('uploads/$fileName').putData(fileBytes);
+}
 
     if (result != null && result.files.isNotEmpty) {
       setState(() {
@@ -212,9 +182,6 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
 
   Future<void> _uploadFile(BuildContext context) async {
     if (_selectedFile != null) {
-      // Perform file upload logic here
-
-      // upload file to server
       String fileName = _selectedFile!.path.split('/').last;
 
       var url = Uri.parse("$baseUrl/schedules");
@@ -228,7 +195,7 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
       };
 
       int? userId = await getUserId();
-
+      //print( 'here');
       final bytes = _selectedFile!.readAsBytesSync();
 
       // create multipart request
@@ -394,32 +361,6 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
                                       ),
                                     ),
                                     SizedBox(height: 16.0),
-                                    // Text(
-                                    //     'Selected Time: ${selectedTime.format(context)}'),
-                                    // TextFormField(
-                                    //   controller: _dayController,
-                                    //   decoration: const InputDecoration(
-                                    //     labelText: 'Day:',
-                                    //   ),
-                                    //   validator: (value) {
-                                    //     if (value!.isEmpty) {
-                                    //       return 'Please enter the day task performed';
-                                    //     }
-                                    //     return null;
-                                    //   },
-                                    // ),
-                                    // TextFormField(
-                                    //   controller: _timeController,
-                                    //   decoration: const InputDecoration(
-                                    //     labelText: 'Time:',
-                                    //   ),
-                                    //   validator: (value) {
-                                    //     if (value!.isEmpty) {
-                                    //       return 'Please enter the time task performed';
-                                    //     }
-                                    //     return null;
-                                    //   },
-                                    // ),
                                     const SizedBox(height: 16.0),
                                     ElevatedButton(
                                       onPressed: () {
