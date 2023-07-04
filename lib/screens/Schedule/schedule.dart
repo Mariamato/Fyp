@@ -4,10 +4,8 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:municipal_cms/screens/Schedule/schedule.dart';
-import '../service/api_provider.dart';
-import '../utils/util.dart';
-
+import '../../service/api_provider.dart';
+import '../../utils/util.dart';
 final TextEditingController _taskController = TextEditingController();
 final TextEditingController _locationController = TextEditingController();
 
@@ -22,7 +20,7 @@ Future _SubmitReport(BuildContext context) async {
   String day = _dController.text;
   String time = _tController.text;
 
-  var url = Uri.parse("$baseUrl/reports");
+  var url = Uri.parse("$baseUrl/schedules");
 
   String? token = await getToken();
   var headers = <String, String>{
@@ -35,12 +33,14 @@ Future _SubmitReport(BuildContext context) async {
 
   // print(userId);
   var data = {
-    'task': task,
+    'name': task,
     'location': location,
     'date_of_service': day,
     'time_of_service': time,
-    'status': 1,
+    'status': 'undone',
     'user_id': userId,
+    'priority':'high',
+    'task_type_id':1
   };
 
   print(data);
@@ -86,14 +86,14 @@ Future _SubmitReport(BuildContext context) async {
   }
 }
 
-class ServiceProviderPage extends StatefulWidget {
-  ServiceProviderPage({super.key});
+class SchedulePage extends StatefulWidget {
+  SchedulePage({super.key});
 
   @override
-  State<ServiceProviderPage> createState() => _ServiceProviderPageState();
+  State<SchedulePage> createState() => _SchedulePageState();
 }
 
-class _ServiceProviderPageState extends State<ServiceProviderPage> {
+class _SchedulePageState extends State<SchedulePage> {
   final _formKey = GlobalKey<FormState>();
   late DateTime selectedDate;
   late TimeOfDay selectedTime;
@@ -103,6 +103,9 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
     super.initState();
     selectedDate = DateTime.now();
     selectedTime = TimeOfDay.now();
+
+    // _dController.text = selectedDate.toString();
+    // _tController.text = selectedTime.toString();
     _dController = TextEditingController();
     _tController = TextEditingController();
   }
@@ -156,14 +159,6 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
     }
   }
 
-  // File Manipulation
-  
-
-  Future<void> _submitt(BuildContext context) async {
-    Navigator.push(context,
-    MaterialPageRoute(builder: (context)=>  SchedulePage()));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -184,9 +179,6 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                   TextButton(
-                      onPressed: (() => _submitt(context)),
-                      child: const Text("Task to be performed")),
                   Center(
                     child: SingleChildScrollView(
                       child: SizedBox(
@@ -204,11 +196,11 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
                                     TextFormField(
                                       controller: _taskController,
                                       decoration: const InputDecoration(
-                                        labelText: 'Task performed:',
+                                        labelText: 'Task to be performed:',
                                       ),
                                       validator: (value) {
                                         if (value!.isEmpty) {
-                                          return 'Please enter task performed';
+                                          return 'Please enter task to be performed';
                                         }
                                         return null;
                                       },
@@ -230,7 +222,7 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
                                       readOnly: true,
                                       controller: _dController,
                                       onTap: () => _selectDate(context),
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                         labelText: 'Select Date',
                                       ),
                                     ),
