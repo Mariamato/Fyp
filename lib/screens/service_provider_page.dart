@@ -172,10 +172,10 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
       // await FirebaseStorage.instance.ref('uploads/$fileName').putData(fileBytes);
     }
 
-  Future<void> _submitt(BuildContext context) async {
-    Navigator.push(context,
-    MaterialPageRoute(builder: (context)=>  SchedulePage()));
-  }
+  // Future<void> _submitt(BuildContext context) async {
+  //   Navigator.push(context,
+  //   MaterialPageRoute(builder: (context)=>  SchedulePage()));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -349,4 +349,10 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
     );
   }
 }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
 }
