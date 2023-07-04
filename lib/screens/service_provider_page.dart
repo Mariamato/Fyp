@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, must_be_immutable
 
 import 'dart:convert';
-import 'dart:html';
+import 'dart:io';
 import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +73,7 @@ Future _SubmitReport(BuildContext context) async {
   } else {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Report submission successfully'),
+        content: Text('Report submission failed'),
         backgroundColor: Colors.red,
         duration: Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
@@ -105,6 +105,9 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
     super.initState();
     selectedDate = DateTime.now();
     selectedTime = TimeOfDay.now();
+
+    // _dController.text = selectedDate.toString();
+    // _tController.text = selectedTime.toString();
     _dController = TextEditingController();
     _tController = TextEditingController();
   }
@@ -172,10 +175,66 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
       // await FirebaseStorage.instance.ref('uploads/$fileName').putData(fileBytes);
     }
 
-  // Future<void> _submitt(BuildContext context) async {
-  //   Navigator.push(context,
-  //   MaterialPageRoute(builder: (context)=>  SchedulePage()));
-  // }
+    if (result != null && result.files.isNotEmpty) {
+      setState(() {
+        _selectedFile = File(result.files.single.path!);
+      });
+    }
+  }
+
+  Future<void> _uploadFile(BuildContext context) async {
+    if (_selectedFile != null) {
+      String fileName = _selectedFile!.path.split('/').last;
+
+      var url = Uri.parse("$baseUrl/schedules");
+
+      String? token = await getToken();
+
+      var headers = <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+
+      int? userId = await getUserId();
+      //print( 'here');
+      final bytes = _selectedFile!.readAsBytesSync();
+
+      // create multipart request
+      var request = http.MultipartRequest("POST", url);
+
+      // multipart that takes file
+      request.files.add(http.MultipartFile.fromBytes(
+        'file',
+        bytes,
+        filename: fileName,
+      ));
+
+      request.headers.addAll(headers);
+
+      request.fields['user_id'] = userId.toString();
+
+      print("===============================");
+      print(request);
+
+      // send the request
+      var response = await request.send();
+
+      print(response.statusCode);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('File uploaded: ${_selectedFile!.path}'),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No file selected'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -347,12 +406,5 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
         ),
       ),
     );
-  }
-}
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }
