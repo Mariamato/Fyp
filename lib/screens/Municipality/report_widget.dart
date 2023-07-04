@@ -76,7 +76,7 @@ class ReportWidget extends StatelessWidget {
                       ),
                       const SizedBox(width: 4.0),
                       Text(
-                        "Done on: $dateOfService",
+                        dateOfService,
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 16.0,
@@ -89,8 +89,9 @@ class ReportWidget extends StatelessWidget {
                         color: Colors.grey,
                         size: 14.0,
                       ),
+                      const SizedBox(width: 4.0),
                       Text(
-                        "Time: $timeOfService",
+                        timeOfService,
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 16.0,

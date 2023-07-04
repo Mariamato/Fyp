@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:municipal_cms/controllers/task_controller.dart';
 import 'package:municipal_cms/repositories/tasks_repository.dart';
 import 'package:municipal_cms/screens/Municipality/schedule_widget.dart';
@@ -90,10 +91,32 @@ class _ViewScheduleState extends State<ViewSchedule> {
                       itemCount: schedules.length,
                       itemBuilder: (context, index) {
                         var schedule = schedules[index];
+
+                        DateTime parsedStartTime = schedule.parsedStartTime;
+                        DateTime parsedEndTime = schedule.parsedEndTime;
+
+                        DateTime parsedDate = schedule.parsedDate;
+
+                        String formattedDate = DateFormat('MMM, dd, yyyy')
+                            .format(parsedDate)
+                            .toString();
+
+                        String formattedStartTime = DateFormat('hh:mm')
+                            .format(parsedStartTime)
+                            .toString();
+
+                        String formattedEndTime = DateFormat('hh:mm')
+                            .format(parsedEndTime)
+                            .toString();
+                            
                         return ScheduleWidget(
                           scheduleId: schedule.id!,
-                          filePath: schedule.filePath!,
-                          uploadedBy: schedule.uploadedBy!,
+                          createdBy: schedule.createdBy!,
+                          startTime: formattedStartTime,
+                          endTime: formattedEndTime,
+                          day: formattedDate,
+                          location: schedule.location!,
+                          description: schedule.description!,
                         );
                       },
                     ),

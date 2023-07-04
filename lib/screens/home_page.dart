@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
          '/Report':(context) =>const  ViewReport(),
-         '/Schedule':(context) =>  ViewSchedule(),
-         '/schedules':(context) =>  ViewSchedule(),
+         '/Schedule':(context) =>  const ViewSchedule(),
+         '/schedules':(context) =>  const ViewSchedule(),
          '/manage':(context) =>  const ManageServiceProvider(),
           '/tasks': (context) => TaskPage(),
          // '/payments': (context) => ConstructionPage(),

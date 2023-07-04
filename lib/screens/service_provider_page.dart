@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:municipal_cms/screens/serviceProvider/create_schedule.dart';
 import '../service/api_provider.dart';
 import '../utils/util.dart';
 
@@ -15,7 +16,7 @@ final TextEditingController _locationController = TextEditingController();
 late TextEditingController _dController = TextEditingController();
 late TextEditingController _tController = TextEditingController();
 
-late String? _fileName; 
+late String? _fileName;
 
 Future _SubmitReport(BuildContext context) async {
   String task = _taskController.text;
@@ -149,7 +150,7 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
         final minute = pickedTime.minute.toString().padLeft(2, '0');
         final period = pickedTime.period == DayPeriod.am ? 'AM' : 'PM';
         final formattedTime = '$hour:$minute';
-        _tController.text = '${formattedTime}';
+        _tController.text = formattedTime;
       });
     } else {
       final hour = pickedTime?.hour.toString().padLeft(2, '0');
@@ -162,16 +163,17 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
 
   // File Manipulation
   File? _selectedFile;
-Future<void> _pickFile() async {
-final result = await FilePicker.platform.pickFiles(type: FileType.any, allowMultiple: false);
+  Future<void> _pickFile() async {
+    final result = await FilePicker.platform
+        .pickFiles(type: FileType.any, allowMultiple: false);
 
-if (result != null && result.files.isNotEmpty) {
-  final fileBytes = result.files.first.bytes;
-  final fileName = result.files.first.name;
-  
-  // upload file
- // await FirebaseStorage.instance.ref('uploads/$fileName').putData(fileBytes);
-}
+    if (result != null && result.files.isNotEmpty) {
+      final fileBytes = result.files.first.bytes;
+      final fileName = result.files.first.name;
+
+      // upload file
+      // await FirebaseStorage.instance.ref('uploads/$fileName').putData(fileBytes);
+    }
 
     if (result != null && result.files.isNotEmpty) {
       setState(() {
@@ -257,51 +259,67 @@ if (result != null && result.files.isNotEmpty) {
                   // TextButton(
                   //     onPressed: (() => _uploadFile(context)),
                   //     child: const Text("Upload Task schedule here...")),
+                  // ElevatedButton(
+                  //     onPressed: () {
+                  //       showDialog(
+                  //         context: context,
+                  //         builder: (BuildContext context) {
+                  //           return SimpleDialog(
+                  //             title: Text('Upload File'),
+                  //             children: [
+                  //               ListTile(
+                  //                 leading: Icon(Icons.upload_file),
+                  //                 title: Text('Upload'),
+                  //                 onTap: () {
+                  //                   Navigator.pop(context);
+                  //                   _pickFile();
+                  //                   // _uploadFile(context);
+                  //                 },
+                  //               ),
+                  //               ListTile(
+                  //                 leading: Icon(Icons.cancel),
+                  //                 title: Text('Cancel'),
+                  //                 onTap: () {
+                  //                   Navigator.pop(context);
+                  //                 },
+                  //               ),
+                  //             ],
+                  //           );
+                  //         },
+                  //       ).then((value) {
+                  //         if (value != null) {
+                  //           _uploadFile(context);
+                  //           ScaffoldMessenger.of(context).showSnackBar(
+                  //             const SnackBar(
+                  //               content: Text('File uploaded successfully'),
+                  //               backgroundColor: Colors.green,
+                  //               duration: Duration(seconds: 2),
+                  //               behavior: SnackBarBehavior.floating,
+                  //             ),
+                  //           );
+                  //         }
+                  //       });
+                  //     },
+                  //     child: const Text(
+                  //       "Upload Task Schedule",
+                  //       style: TextStyle(fontSize: 20.0),
+                  //     )),
+                  const SizedBox(height: 20.0),
                   ElevatedButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return SimpleDialog(
-                              title: Text('Upload File'),
-                              children: [
-                                ListTile(
-                                  leading: Icon(Icons.upload_file),
-                                  title: Text('Upload'),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    _pickFile();
-                                    // _uploadFile(context);
-                                  },
-                                ),
-                                ListTile(
-                                  leading: Icon(Icons.cancel),
-                                  title: Text('Cancel'),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        ).then((value) {
-                          if (value != null) {
-                            _uploadFile(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('File uploaded successfully'),
-                                backgroundColor: Colors.green,
-                                duration: Duration(seconds: 2),
-                                behavior: SnackBarBehavior.floating,
-                              ),
-                            );
-                          }
-                        });
-                      },
-                      child: const Text(
-                        "Upload Task Schedule",
-                        style: TextStyle(fontSize: 20.0),
-                      )),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateSchedulePage(),
+                        ),
+                      );
+                    }, 
+                    child: 
+                    const Text(
+                      "Create Task Schedule",
+                      style: TextStyle(fontSize: 20.0),
+                    ),
+                  ),
                   Center(
                     child: SingleChildScrollView(
                       child: SizedBox(

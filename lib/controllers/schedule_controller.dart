@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<List<Schedule>> fetchSchedules() async {
   var prefs = await SharedPreferences.getInstance();
 
-  final String apiUrl = '$baseUrl/schedules';
+  const String apiUrl = '$baseUrl/schedules';
   final String? token = prefs.getString("token");
 
   final response = await http.get(
@@ -25,8 +25,12 @@ Future<List<Schedule>> fetchSchedules() async {
     for (var data in jsonData) {
       Schedule schedule = Schedule(
         id: data['id'],
-        filePath: data['file_path'],
-        uploadedBy: data['uploaded_by'],
+        startTime: data['start_time'],
+        endTime: data['end_time'],
+        day: data['day'],
+        location: data['location'],
+        description: data['description'],
+        createdBy: data['createdBy'],
       );
       schedules.add(schedule);
     }
