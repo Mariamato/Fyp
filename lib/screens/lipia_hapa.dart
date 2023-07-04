@@ -52,9 +52,13 @@ class LipaHapaPage extends StatelessWidget {
             duration: Duration(seconds: 5),
             behavior: SnackBarBehavior.floating,
             onVisible: () {
-              phoneNumber = '';
-              amount = '';
-              Navigator.pop(context);
+              // phoneNumber = '';
+              // amount = '';
+              _phoneNumberController.clear();
+              _amountController.clear();
+              // Navigator.pop(context);
+              // go back
+
               // Navigator.pushNamed(context, '/home');
             },
           ),
