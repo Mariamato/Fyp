@@ -66,21 +66,7 @@ class ServiceProviderLoginPage extends StatelessWidget {
       }
 
       // if not service provider
-      if (jsonResponse['userData']['role'] != 'service_provider') {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Authorization Failed'),
-            content: const Text('User is not a service provider'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
+
 
       // print(jsonResponse);
       if (jsonResponse['token'] == null) {

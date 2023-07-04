@@ -23,21 +23,17 @@ class MunicipalityLoginPage extends StatelessWidget {
   void _login(BuildContext context) async {
     String password = _passwordController.text;
     String phoneNumber = _contactController.text;
-
-    // var csrfResponse = await http.get(Uri.parse('/sanctum/csrf-cookie'));
-    // var csrfToken = csrfResponse.headers['set-cookie'] ?? '';
-
-    // var url = Uri.parse('http://127.0.0.1:8000/api/login');
+    
     var url = Uri.parse("$baseUrl/login");
     var headers = <String, String>{
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      // 'X-XSRF-TOKEN': csrfToken,
       'user_type': 'admin'
     };
     var data = {
       'phone': phoneNumber,
       'password': password,
+      'role':'admin',
     };
     
 
@@ -66,22 +62,6 @@ class MunicipalityLoginPage extends StatelessWidget {
         );
       }
 
-       // if not service provider
-      if (jsonResponse['userData']['role'] != 'admin' || jsonResponse['userData']['role'] != 'root') {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Authorization Failed'),
-            content: const Text('User is not a service provider'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
 
       // print(jsonResponse);
       if (jsonResponse['token'] == null) {

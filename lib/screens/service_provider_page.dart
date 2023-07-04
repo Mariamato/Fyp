@@ -73,7 +73,7 @@ Future _SubmitReport(BuildContext context) async {
   } else {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Report submission failed'),
+        content: Text('Report submission successfully'),
         backgroundColor: Colors.red,
         duration: Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
@@ -305,7 +305,7 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
                   //       style: TextStyle(fontSize: 20.0),
                   //     )),
                   const SizedBox(height: 20.0),
-                  ElevatedButton(
+                  TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,

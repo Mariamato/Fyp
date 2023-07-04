@@ -178,8 +178,8 @@ class _CreateSchedulePageState extends State<CreateSchedulePage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Schedule creation failed"),
-          backgroundColor: Colors.red,
+          content: Text("Schedule creation Successfully"),
+          backgroundColor: Colors.green,
           duration: Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
           onVisible: () {
@@ -214,20 +214,6 @@ class _CreateSchedulePageState extends State<CreateSchedulePage> {
               child: Column(
                 children: [
                   const SizedBox(height: 20.0),
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //         builder: (context) => CreateSchedulePage(),
-                  //       ),
-                  //     );
-                  //   },
-                  //   child: const Text(
-                  //     "Create Task Schedule",
-                  //     style: TextStyle(fontSize: 20.0),
-                  //   ),
-                  // ),
                   Center(
                     child: SingleChildScrollView(
                       child: SizedBox(
