@@ -1,22 +1,18 @@
 // ignore_for_file: use_build_context_synchronously, must_be_immutable
 
 import 'dart:convert';
-import 'dart:html';
 import 'dart:ui';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:municipal_cms/screens/serviceProvider/create_schedule.dart';
-import '../service/api_provider.dart';
-import '../utils/util.dart';
-
+import '../../service/api_provider.dart';
+import '../../utils/util.dart';
 final TextEditingController _taskController = TextEditingController();
 final TextEditingController _locationController = TextEditingController();
 
 late TextEditingController _dController = TextEditingController();
 late TextEditingController _tController = TextEditingController();
 
-late String? _fileName;
+late String? _fileName; 
 
 Future _SubmitReport(BuildContext context) async {
   String task = _taskController.text;
@@ -24,7 +20,7 @@ Future _SubmitReport(BuildContext context) async {
   String day = _dController.text;
   String time = _tController.text;
 
-  var url = Uri.parse("$baseUrl/reports");
+  var url = Uri.parse("$baseUrl/schedules");
 
   String? token = await getToken();
   var headers = <String, String>{
@@ -37,12 +33,14 @@ Future _SubmitReport(BuildContext context) async {
 
   // print(userId);
   var data = {
-    'task': task,
+    'name': task,
     'location': location,
     'date_of_service': day,
     'time_of_service': time,
-    'status': 1,
+    'status': 'undone',
     'user_id': userId,
+    'priority':'high',
+    'task_type_id':1
   };
 
   print(data);
@@ -88,14 +86,14 @@ Future _SubmitReport(BuildContext context) async {
   }
 }
 
-class ServiceProviderPage extends StatefulWidget {
-  ServiceProviderPage({super.key});
+class SchedulePage extends StatefulWidget {
+  SchedulePage({super.key});
 
   @override
-  State<ServiceProviderPage> createState() => _ServiceProviderPageState();
+  State<SchedulePage> createState() => _SchedulePageState();
 }
 
-class _ServiceProviderPageState extends State<ServiceProviderPage> {
+class _SchedulePageState extends State<SchedulePage> {
   final _formKey = GlobalKey<FormState>();
   late DateTime selectedDate;
   late TimeOfDay selectedTime;
@@ -105,6 +103,9 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
     super.initState();
     selectedDate = DateTime.now();
     selectedTime = TimeOfDay.now();
+
+    // _dController.text = selectedDate.toString();
+    // _tController.text = selectedTime.toString();
     _dController = TextEditingController();
     _tController = TextEditingController();
   }
@@ -147,7 +148,7 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
         final minute = pickedTime.minute.toString().padLeft(2, '0');
         final period = pickedTime.period == DayPeriod.am ? 'AM' : 'PM';
         final formattedTime = '$hour:$minute';
-        _tController.text = formattedTime;
+        _tController.text = '${formattedTime}';
       });
     } else {
       final hour = pickedTime?.hour.toString().padLeft(2, '0');
@@ -156,25 +157,6 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
       final formattedTime = '$hour:$minute';
       _tController.text = '${formattedTime}';
     }
-  }
-
-  // File Manipulation
-  File? _selectedFile;
-  Future<void> _pickFile() async {
-    final result = await FilePicker.platform
-        .pickFiles(type: FileType.any, allowMultiple: false);
-
-    if (result != null && result.files.isNotEmpty) {
-      final fileBytes = result.files.first.bytes;
-      final fileName = result.files.first.name;
-
-      // upload file
-      // await FirebaseStorage.instance.ref('uploads/$fileName').putData(fileBytes);
-    }
-
-  Future<void> _submitt(BuildContext context) async {
-    Navigator.push(context,
-    MaterialPageRoute(builder: (context)=>  SchedulePage()));
   }
 
   @override
@@ -197,70 +179,6 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  // TextButton(
-                  //     onPressed: (() => _uploadFile(context)),
-                  //     child: const Text("Upload Task schedule here...")),
-                  // ElevatedButton(
-                  //     onPressed: () {
-                  //       showDialog(
-                  //         context: context,
-                  //         builder: (BuildContext context) {
-                  //           return SimpleDialog(
-                  //             title: Text('Upload File'),
-                  //             children: [
-                  //               ListTile(
-                  //                 leading: Icon(Icons.upload_file),
-                  //                 title: Text('Upload'),
-                  //                 onTap: () {
-                  //                   Navigator.pop(context);
-                  //                   _pickFile();
-                  //                   // _uploadFile(context);
-                  //                 },
-                  //               ),
-                  //               ListTile(
-                  //                 leading: Icon(Icons.cancel),
-                  //                 title: Text('Cancel'),
-                  //                 onTap: () {
-                  //                   Navigator.pop(context);
-                  //                 },
-                  //               ),
-                  //             ],
-                  //           );
-                  //         },
-                  //       ).then((value) {
-                  //         if (value != null) {
-                  //           _uploadFile(context);
-                  //           ScaffoldMessenger.of(context).showSnackBar(
-                  //             const SnackBar(
-                  //               content: Text('File uploaded successfully'),
-                  //               backgroundColor: Colors.green,
-                  //               duration: Duration(seconds: 2),
-                  //               behavior: SnackBarBehavior.floating,
-                  //             ),
-                  //           );
-                  //         }
-                  //       });
-                  //     },
-                  //     child: const Text(
-                  //       "Upload Task Schedule",
-                  //       style: TextStyle(fontSize: 20.0),
-                  //     )),
-                  const SizedBox(height: 20.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateSchedulePage(),
-                        ),
-                      );
-                    }, 
-                    child: 
-                    const Text(
-                      "Create Task Schedule",
-                      style: TextStyle(fontSize: 20.0),
-                    ),
-                  ),
                   Center(
                     child: SingleChildScrollView(
                       child: SizedBox(
@@ -278,11 +196,11 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
                                     TextFormField(
                                       controller: _taskController,
                                       decoration: const InputDecoration(
-                                        labelText: 'Task performed:',
+                                        labelText: 'Task to be performed:',
                                       ),
                                       validator: (value) {
                                         if (value!.isEmpty) {
-                                          return 'Please enter task performed';
+                                          return 'Please enter task to be performed';
                                         }
                                         return null;
                                       },
@@ -304,7 +222,7 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
                                       readOnly: true,
                                       controller: _dController,
                                       onTap: () => _selectDate(context),
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                         labelText: 'Select Date',
                                       ),
                                     ),
@@ -348,5 +266,4 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
       ),
     );
   }
-}
 }
