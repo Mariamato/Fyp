@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:convert';
 import 'dart:ui';
 
@@ -44,7 +46,24 @@ class LipaHapaPage extends StatelessWidget {
       var jsonResponse = jsonDecode(response.body);
       print(jsonResponse);
       if (jsonResponse['status'] == 'success') {
-        // ignore: use_build_context_synchronously
+         String controlNumber = jsonResponse['data']['control_number'];
+        var smsUrl = Uri.parse("https://apisms.beem.africa/v1/send");
+        var smsHeaders = <String, String>{
+          'Content-Type': 'application/json',
+          'api_key': '58a4615ffcac93b1',
+          'secret_key': 'NDdiZWVmNTE3Y2QzNmEyYWMzNjkwYmEwNjQwMjkzYmU4NjZhZmNmMTU3NzU5MTQyYzYxZWJmMmY1ZmQ2ZGQ5Nw',
+        };
+        var smsData = {
+          'source_addr': 'SENDER_NAME',
+          'dest_addr': phoneNumber,
+          'message': 'Your control number: $controlNumber',
+        };
+         var smsResponse = await http.post(
+          smsUrl,
+          headers: smsHeaders,
+          body: jsonEncode(smsData),
+        );
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Payment successful, control number: ${jsonResponse['data']['control_number']} sent to $phoneNumber'),
@@ -52,14 +71,8 @@ class LipaHapaPage extends StatelessWidget {
             duration: Duration(seconds: 5),
             behavior: SnackBarBehavior.floating,
             onVisible: () {
-              // phoneNumber = '';
-              // amount = '';
               _phoneNumberController.clear();
               _amountController.clear();
-              // Navigator.pop(context);
-              // go back
-
-              // Navigator.pushNamed(context, '/home');
             },
           ),
         );
@@ -80,7 +93,7 @@ class LipaHapaPage extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Payment Successfully'),
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.green,
           duration: Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
         ),
@@ -92,7 +105,7 @@ class LipaHapaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lipia Hapa'),
+        title: const Text('Payment'),
         backgroundColor: Colors.black,
       ),
       body: Container(
@@ -106,8 +119,6 @@ class LipaHapaPage extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 10.5, sigmaY: 10.5),
           child: Center(
             child: SizedBox(
-              // height: 400,
-              // width: 300,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -121,7 +132,6 @@ class LipaHapaPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
-                                  // 'Ilikuweza kulipia, ingiza namba ya simu na utapata Control number kwa njia ya sms, lipia kwa mtandao wowote. ',
                                   "For payment, enter your phone number and you will get a Control number via sms, pay by any network.",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
