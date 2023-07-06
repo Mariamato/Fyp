@@ -1,12 +1,11 @@
 // ignore_for_file: use_build_context_synchronously, must_be_immutable
 
 import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:municipal_cms/screens/serviceProvider/create_schedule.dart';
+import 'package:municipal_cms/screens/tasks/tasks_page.dart';
 import '../service/api_provider.dart';
 import '../utils/util.dart';
 
@@ -60,7 +59,7 @@ Future _SubmitReport(BuildContext context) async {
       SnackBar(
         content: Text('Report submitted successfully'),
         backgroundColor: Colors.green,
-        duration: Duration(seconds: 2),
+        duration: Duration(seconds: 5),
         behavior: SnackBarBehavior.floating,
         onVisible: () {
           _taskController.clear();
@@ -74,8 +73,8 @@ Future _SubmitReport(BuildContext context) async {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Report submission successfully'),
-        backgroundColor: Colors.red,
-        duration: Duration(seconds: 2),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 5),
         behavior: SnackBarBehavior.floating,
         onVisible: () {
           _taskController.clear();
@@ -105,9 +104,6 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
     super.initState();
     selectedDate = DateTime.now();
     selectedTime = TimeOfDay.now();
-
-    // _dController.text = selectedDate.toString();
-    // _tController.text = selectedTime.toString();
     _dController = TextEditingController();
     _tController = TextEditingController();
   }
@@ -161,81 +157,6 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
     }
   }
 
-  // File Manipulation
-  File? _selectedFile;
-  Future<void> _pickFile() async {
-    final result = await FilePicker.platform
-        .pickFiles(type: FileType.any, allowMultiple: false);
-
-    if (result != null && result.files.isNotEmpty) {
-      final fileBytes = result.files.first.bytes;
-      final fileName = result.files.first.name;
-
-      // upload file
-      // await FirebaseStorage.instance.ref('uploads/$fileName').putData(fileBytes);
-    }
-
-    if (result != null && result.files.isNotEmpty) {
-      setState(() {
-        _selectedFile = File(result.files.single.path!);
-      });
-    }
-  }
-
-  Future<void> _uploadFile(BuildContext context) async {
-    if (_selectedFile != null) {
-      String fileName = _selectedFile!.path.split('/').last;
-
-      var url = Uri.parse("$baseUrl/schedules");
-
-      String? token = await getToken();
-
-      var headers = <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
-
-      int? userId = await getUserId();
-      //print( 'here');
-      final bytes = _selectedFile!.readAsBytesSync();
-
-      // create multipart request
-      var request = http.MultipartRequest("POST", url);
-
-      // multipart that takes file
-      request.files.add(http.MultipartFile.fromBytes(
-        'file',
-        bytes,
-        filename: fileName,
-      ));
-
-      request.headers.addAll(headers);
-
-      request.fields['user_id'] = userId.toString();
-
-      print("===============================");
-      print(request);
-
-      // send the request
-      var response = await request.send();
-
-      print(response.statusCode);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('File uploaded: ${_selectedFile!.path}'),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No file selected'),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -256,54 +177,6 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  // TextButton(
-                  //     onPressed: (() => _uploadFile(context)),
-                  //     child: const Text("Upload Task schedule here...")),
-                  // ElevatedButton(
-                  //     onPressed: () {
-                  //       showDialog(
-                  //         context: context,
-                  //         builder: (BuildContext context) {
-                  //           return SimpleDialog(
-                  //             title: Text('Upload File'),
-                  //             children: [
-                  //               ListTile(
-                  //                 leading: Icon(Icons.upload_file),
-                  //                 title: Text('Upload'),
-                  //                 onTap: () {
-                  //                   Navigator.pop(context);
-                  //                   _pickFile();
-                  //                   // _uploadFile(context);
-                  //                 },
-                  //               ),
-                  //               ListTile(
-                  //                 leading: Icon(Icons.cancel),
-                  //                 title: Text('Cancel'),
-                  //                 onTap: () {
-                  //                   Navigator.pop(context);
-                  //                 },
-                  //               ),
-                  //             ],
-                  //           );
-                  //         },
-                  //       ).then((value) {
-                  //         if (value != null) {
-                  //           _uploadFile(context);
-                  //           ScaffoldMessenger.of(context).showSnackBar(
-                  //             const SnackBar(
-                  //               content: Text('File uploaded successfully'),
-                  //               backgroundColor: Colors.green,
-                  //               duration: Duration(seconds: 2),
-                  //               behavior: SnackBarBehavior.floating,
-                  //             ),
-                  //           );
-                  //         }
-                  //       });
-                  //     },
-                  //     child: const Text(
-                  //       "Upload Task Schedule",
-                  //       style: TextStyle(fontSize: 20.0),
-                  //     )),
                   const SizedBox(height: 20.0),
                   TextButton(
                     onPressed: () {
@@ -313,9 +186,8 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
                           builder: (context) => CreateSchedulePage(),
                         ),
                       );
-                    }, 
-                    child: 
-                    const Text(
+                    },
+                    child: const Text(
                       "Create Task Schedule",
                       style: TextStyle(fontSize: 20.0),
                     ),
@@ -397,6 +269,19 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
                           ),
                         ),
                       ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TasksPage()),
+                      );
+                    },
+                    child: const Text(
+                      "View Resident requested Tasks",
+                      style: TextStyle(fontSize: 20.0),
                     ),
                   ),
                 ],

@@ -62,7 +62,7 @@ class ScheduleWidget extends StatelessWidget {
                       ),
                       SizedBox(width: 5),
                       Text(
-                        "Provider: $createdBy",
+                        "Service Provider: $createdBy",
                         style: const TextStyle(
                           color: Colors.black87,
                           fontSize: 16.0,
@@ -124,6 +124,20 @@ class ScheduleWidget extends StatelessWidget {
                       ),
                     ],
                   ),
+                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: 
+                   [
+                    const Text('Task to be performed:'),
+                    Text(
+                        description,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                   ],),
+                   
                 ],
               ),
             ),

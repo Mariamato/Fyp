@@ -17,14 +17,17 @@ class LipaHapaPage extends StatelessWidget {
   void _lipia(BuildContext context) async {
     String phoneNumber = _phoneNumberController.text;
     String amount = _amountController.text;
-
+    
     var url = Uri.parse("$baseUrl/payments");
     String? token = await getToken();
     var headers = <String, String>{
       'Content-Type': 'application/json',
       'Accept': 'appliction/json',
       'Authorization': 'Bearer $token',
-      'role': 'resident'
+      'role': 'resident',
+      'api_key': '58a4615ffcac93b1',
+      'secret_key': 'NDdiZWVmNTE3Y2QzNmEyYWMzNjkwYmEwNjQwMjkzYmU4NjZhZmNmMTU3NzU5MTQyYzYxZWJmMmY1ZmQ2ZGQ5Nw',
+
     };
     int? userId = await getUserId();
     var data = {

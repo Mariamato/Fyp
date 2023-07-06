@@ -1,8 +1,10 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:municipal_cms/screens/tasks/task_widget.dart';
-import 'package:municipal_cms/models/task_model.dart' as taskModel;
+import 'package:municipal_cms/models/task_model.dart';
 
 import '../../controllers/tasks_controller.dart';
 
@@ -15,7 +17,7 @@ class TasksPage extends StatefulWidget {
 
 class _TasksPageState extends State<TasksPage> {
   // final TaskController controller = TaskController();
-  List<taskModel.Task> tasks = [];
+  List<Task> tasks = [];
   bool isLoading = true;
 
   @override
@@ -26,7 +28,7 @@ class _TasksPageState extends State<TasksPage> {
 
   void fetchTaskData() async {
     try {
-      List<taskModel.Task> fetchedTasks = await fetchTasks();
+      List<Task> fetchedTasks = await fetchTasks();
       setState(() {
         tasks = fetchedTasks;
         isLoading = false;
@@ -50,14 +52,14 @@ class _TasksPageState extends State<TasksPage> {
         ),
         elevation: 0,
         centerTitle: true,
-        title: Text("Tasks"),
+        title: const Text("Tasks List"),
       ),
       body: SafeArea(
-        minimum: EdgeInsets.symmetric(horizontal: 20.0),
+        minimum: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
                 border: const Border(
@@ -67,7 +69,7 @@ class _TasksPageState extends State<TasksPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Total Tasks",
+                    "Total Tasks requested by Resident",
                     style: TextStyle(
                       color: Colors.black87,
                     ),
@@ -92,8 +94,7 @@ class _TasksPageState extends State<TasksPage> {
                           String formattedDate = DateFormat('MMM dd, yyyy')
                               .format(parsedDate)
                               .toString();
-
-                          return Task(
+                          return TaskWidget(
                             customerName: task.customerName!,
                             taskType: task.taskType!,
                             dueDate: formattedDate,

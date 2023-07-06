@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
-class Task extends StatelessWidget { 
+class TaskWidget extends StatelessWidget { 
   final String customerName;
   final String taskType;
   final String dueDate;
@@ -10,7 +8,7 @@ class Task extends StatelessWidget {
   final String location;
   final int taskId;
 
-  const Task({
+  const TaskWidget({
     Key? key,
     required this.customerName,
     required this.taskType,
@@ -27,8 +25,8 @@ class Task extends StatelessWidget {
         Navigator.pop(context);
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10),
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.blue, width: 0.15),
           borderRadius: BorderRadius.circular(8.0),

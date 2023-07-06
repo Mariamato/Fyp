@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:municipal_cms/controllers/task_controller.dart';
-import 'package:municipal_cms/repositories/tasks_repository.dart';
 import 'package:municipal_cms/screens/Municipality/provider_widget.dart';
 
 import '../../controllers/service_provider_controller.dart';
@@ -71,7 +68,7 @@ class _ManageServiceProviderState extends State<ManageServiceProvider> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Service provider list",
+                    "Service providers list",
                     style: TextStyle(
                       color: Colors.black87,
                     ),
@@ -98,7 +95,7 @@ class _ManageServiceProviderState extends State<ManageServiceProvider> {
                           phone: serviceP.phoneNumber!,
                           address: serviceP.address!,
                           municipality: serviceP.municipality!,
-                          speciality: serviceP.speciality!,
+                          speciality: 'Waste collection',
                           providerId: serviceP.id!,
                         );
                       },

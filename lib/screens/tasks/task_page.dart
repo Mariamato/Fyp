@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'dart:convert';
 import 'dart:ui';
@@ -47,28 +47,16 @@ Future<void> _SubmitTask(BuildContext context) async {
 
   // if response is okay then clear inputs and display a popup
   if (response.statusCode == 200) {
-    var jsonResponse = json.decode(response.body);
-
-    print("DATA:_");
-    print(jsonResponse);
-
-    var taskName = jsonResponse['data']['name'];
-
-    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Task $taskName created successfully'),
+        content: Text('Task created successfully'),
         backgroundColor: Colors.green,
-        duration: Duration(seconds: 2),
+        duration: Duration(seconds: 5),
         behavior: SnackBarBehavior.floating,
         onVisible: () {
-          // Clear the input fields
           _TaskController.clear();
           _LocationController.clear();
           _DescriptionController.clear();
-
-          // Reset the form
-          // _formKey.currentState?.reset();
         },
       ),
     );
@@ -95,10 +83,16 @@ Future<void> _SubmitTask(BuildContext context) async {
   }
 }
 
-class TaskPage extends StatelessWidget {
-  final _formKey = GlobalKey<FormState>();
+class TaskPage extends StatefulWidget {
 
   TaskPage({super.key});
+
+  @override
+  State<TaskPage> createState() => _TaskPageState();
+}
+
+class _TaskPageState extends State<TaskPage> {
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -178,13 +172,7 @@ class TaskPage extends StatelessWidget {
                                 }
                               },
                               child: const Text('Submit'),
-                              // style: ElevatedButton.styleFrom(
-                              //   primary: Colors.blue,
-                              //   padding: EdgeInsets.symmetric(vertical: 16.0),
-                              //   shape: RoundedRectangleBorder(
-                              //     borderRadius: BorderRadius.circular(10.0),
-                              //   ),
-                              // ),
+                             
                             ),
                           ],
                         ),
@@ -197,7 +185,7 @@ class TaskPage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: 50,
-                child: ElevatedButton(
+                child: TextButton(
                   onPressed: () {
                     Navigator.push(
                       context,

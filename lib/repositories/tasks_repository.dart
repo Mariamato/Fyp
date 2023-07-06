@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:municipal_cms/service/api_provider.dart';
 
 import '../models/task_model_dio.dart';

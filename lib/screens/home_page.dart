@@ -5,7 +5,6 @@ import 'package:municipal_cms/controllers/task_controller.dart';
 import 'package:municipal_cms/screens/Service_provider_login_page.dart';
 import 'package:municipal_cms/screens/lipia_hapa.dart';
 import 'package:municipal_cms/screens/Municipality/municipality_login_page.dart';
-import 'package:municipal_cms/screens/payments/payments_list_page.dart';
 import 'package:municipal_cms/screens/tasks/task_page.dart';
 import 'package:provider/provider.dart';
 import 'Municipality/manage_service_provider.dart';

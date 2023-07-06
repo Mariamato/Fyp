@@ -6,7 +6,7 @@ class ProviderWidget extends StatelessWidget {
   final String phone;
   final String address;
   final String municipality;
-  final String speciality;
+  final String speciality = 'Waste collection';
   final int providerId;
 
   const ProviderWidget({
@@ -16,8 +16,7 @@ class ProviderWidget extends StatelessWidget {
     required this.phone,
     required this.address,
     required this.municipality,
-    required this.speciality,
-    required this.providerId,
+    required this.providerId, required String speciality,
   }) : super(key: key);
 
   @override
@@ -40,13 +39,12 @@ class ProviderWidget extends StatelessWidget {
               backgroundColor: Colors.grey[200],
               radius: 25.0,
               child: const Padding(
-                padding: EdgeInsets.all(6.0),
-                child: Icon(
-                  Icons.person,
-                  size: 20.0,
-                  color: Colors.blue,
-                )
-              ),
+                  padding: EdgeInsets.all(6.0),
+                  child: Icon(
+                    Icons.person,
+                    size: 20.0,
+                    color: Colors.blue,
+                  )),
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
@@ -72,6 +70,14 @@ class ProviderWidget extends StatelessWidget {
                   ),
                   Text(
                     phone,
+                    style: const TextStyle(
+                      color: Colors.black87,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    speciality,
                     style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 14.0,

@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, must_be_immutable
+// ignore_for_file: use_build_context_synchronously, must_be_immutable, unused_local_variable
 
 import 'dart:convert';
 import 'dart:ui';
